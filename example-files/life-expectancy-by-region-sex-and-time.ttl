@@ -1,0 +1,288 @@
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000022-2004-01-01T00:00:00/P3Y-Male>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000022>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2004-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Male>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    76.7;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000022-2004-01-01T00:00:00/P3Y-Female>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000022>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2004-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Female>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    80.7;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000022-2005-01-01T00:00:00/P3Y-Male>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000022>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2005-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Male>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    77.1;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000022-2005-01-01T00:00:00/P3Y-Female>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000022>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2005-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Female>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    80.9;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000022-2006-01-01T00:00:00/P3Y-Male>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000022>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2006-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Male>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    77.0;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000022-2006-01-01T00:00:00/P3Y-Female>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000022>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2006-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Female>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    81.5;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000015-2004-01-01T00:00:00/P3Y-Male>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000015>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2004-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Male>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    78.7;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000015-2004-01-01T00:00:00/P3Y-Female>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000015>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2004-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Female>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    83.3;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000015-2005-01-01T00:00:00/P3Y-Male>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000015>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2005-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Male>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    78.6;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000015-2005-01-01T00:00:00/P3Y-Female>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000015>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2005-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Female>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    83.7;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000015-2006-01-01T00:00:00/P3Y-Male>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000015>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2006-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Male>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    78.7;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000015-2006-01-01T00:00:00/P3Y-Female>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000015>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2006-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Female>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    83.4;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000021-2004-01-01T00:00:00/P3Y-Male>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000021>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2004-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Male>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    76.6;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000021-2004-01-01T00:00:00/P3Y-Female>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000021>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2004-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Female>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    81.3;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000021-2005-01-01T00:00:00/P3Y-Male>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000021>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2005-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Male>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    76.5;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000021-2005-01-01T00:00:00/P3Y-Female>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000021>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2005-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Female>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    81.5;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000021-2006-01-01T00:00:00/P3Y-Male>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000021>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2006-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Male>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    76.6;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000021-2006-01-01T00:00:00/P3Y-Female>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000021>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2006-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Female>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    81.7;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000024-2004-01-01T00:00:00/P3Y-Male>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000024>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2004-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Male>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    75.5;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000024-2004-01-01T00:00:00/P3Y-Female>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000024>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2004-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Female>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    79.1;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000024-2005-01-01T00:00:00/P3Y-Male>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000024>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2005-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Male>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    75.5;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000024-2005-01-01T00:00:00/P3Y-Female>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000024>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2005-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Female>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    79.4;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000024-2006-01-01T00:00:00/P3Y-Male>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000024>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2006-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Male>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    74.9;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
+
+<http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube/obs/W06000024-2006-01-01T00:00:00/P3Y-Female>
+  a <http://purl.org/linked-data/cube#Observation>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/area>
+    <http://statistics.data.gov.uk/id/statistical-geography/W06000024>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/period>
+    <http://reference.data.gov.uk/id/gregorian-interval/2006-01-01T00:00:00/P3Y>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/dimension/sex>
+    <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/codelist/sex/code/Female>;
+  <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/measure/life-expectancy>
+    79.6;
+  <http://purl.org/linked-data/cube#dataSet> <http://data.gov.uk/dataset/life-expectancy-by-region-sex-and-time/datacube> .
