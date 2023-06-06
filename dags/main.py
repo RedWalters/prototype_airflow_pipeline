@@ -15,6 +15,11 @@ import rdflib
 import ssl
 import json
 
+log = logging.getLogger("airflow.task.operators")
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.INFO)
+log.addHandler(handler)
+
 default_args = {
     'owner' : 'red',
     'retries' : 5,
@@ -205,6 +210,20 @@ def add_observations(
     )
     return req.json()
 
+def authenticate():
+    logger = logging.getLogger("airflow.task")
+
+    load_dotenv()
+    token = pmd_authenticate(
+        Variable.get("PMD_AUTH0_ENDPOINT"),
+        Variable.get("PMD_CLIENT_ID"),
+        Variable.get("PMD_CLIENT_SECRET"),
+    )
+    logger.info("Creating draft")
+    draft_id = pmd_create_draft(token=token, pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT"))
+    logger.info(f"Draft ID: {draft_id}")
+
+    return token, draft_id
 
 def create_draft(**kwargs):
     ti = kwargs['ti']
@@ -223,14 +242,14 @@ def create_draft(**kwargs):
         token=token,
         pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT"),
         draft_id=draft_id,
-        metadata_file= "example-files/life-expectancy-by-region-sex-and-time.csv-metadata.json"
+        metadata_file= "example-files/out/4g-coverage.csv-metadata.json"
     )
     logger.info("Adding PMDCAT metadata to draft")
     add_pmdcat(
         token=token,
         pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT"),
         draft_id=draft_id,
-        metadata_file= "example-files/life-expectancy-by-region-sex-and-time.csv-metadata.json"
+        metadata_file= "example-files/out/4g-coverage.csv-metadata.json"
     )
     # Need to the run csv2rdf step manually for now
     # docker run --rm -v $PWD:/workspace -w /workspace -it gsscogs/csv2rdf \
@@ -240,24 +259,9 @@ def create_draft(**kwargs):
         token=token,
         pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT"),
         draft_id=draft_id,
-        metadata_file="example-files/life-expectancy-by-region-sex-and-time.csv-metadata.json",
-        observations_file="example-files/life-expectancy-by-region-sex-and-time.ttl",
+        metadata_file="example-files/out/4g-coverage.csv-metadata.json",
+        observations_file="example-files/out/output.ttl",
     )
-
-def authenticate():
-    logger = logging.getLogger("airflow.task")
-
-    load_dotenv()
-    token = pmd_authenticate(
-        Variable.get("PMD_AUTH0_ENDPOINT"),
-        Variable.get("PMD_CLIENT_ID"),
-        Variable.get("PMD_CLIENT_SECRET"),
-    )
-    logger.info("Creating draft")
-    draft_id = pmd_create_draft(token=token, pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT"))
-    logger.info(f"Draft ID: {draft_id}")
-
-    return token, draft_id
 
 def test_tasks():
     print("PMD_AUTH0_ENDPOINT: " + Variable.get("PMD_AUTH0_ENDPOINT")),
@@ -269,32 +273,66 @@ with DAG(
     default_args = default_args,
     dag_id = 'Auth_and_push_to_drafter',
     description = 'Authenticate user to staging and create draft',
-    start_date = datetime(2023, 4, 24),
+    start_date = datetime(2023, 5, 22),
     schedule_interval = '@daily'
 ) as dag:
-    task1 = PythonOperator(
+    #task0 = DockerOperator(
+    #    task_id = 'csvlint',
+    #    image = 'gsscogs/csvlint',
+    #    command = "csvlint -s https://raw.githubusercontent.com/RedWalters/prototype_pipeline/main/example-files/life-expectancy-by-region-sex-and-time.csv-metadata.json",
+    #    docker_url = 'tcp://docker-proxy:2375',
+    #    network_mode = 'host',
+    #    working_dir = '/opt/airflow/example-files/out'
+    #)    
+    task1 = BashOperator(
+        task_id = 'csvcubed',
+        bash_command = 'csvcubed build ${AIRFLOW_HOME}/example-files/4g-coverage.csv',
+        cwd='example-files'
+    )    
+    task2= PythonOperator(
         task_id = 'authenticate',
         python_callable = authenticate
     )
-    task2 = PythonOperator(
+    task3 = PythonOperator(
         task_id = 'create_draft',
         python_callable = create_draft,
         provide_context = True
     )   
     
-    task1 >> task2
+    task1 >> task2 >> task3
 
 
     #Currently the below will run successfully (with the corresponding stuff added to docker-compose)
     #but I havent figured out how to return the output.ttl yet so it doesnt actually return anything at the moment
-    """
-    task3 = DockerOperator(
-        task_id = 'csv2rdf',
-        image = 'gsscogs/csv2rdf',
-        command = "csv2rdf -u https://raw.githubusercontent.com/GSS-Cogs/poc-pipelines/main/example-files/life-expectancy-by-region-sex-and-time.csv-metadata.json -m minimal -o output.ttl",
-        docker_url = 'tcp://docker-proxy:2375',
-        network_mode = 'host'
-    )
-    """
+    
+    #task4 = DockerOperator(
+    #    task_id = 'csv2rdf',
+    #    image = 'gsscogs/csv2rdf',
+    #    command = "csv2rdf -u https://raw.githubusercontent.com/GSS-Cogs/poc-pipelines/main/example-files/life-expectancy-by-region-sex-and-time.csv-metadata.json -m minimal -o output.ttl",
+    #    docker_url = 'tcp://docker-proxy:2375',
+    #    network_mode = 'bridge',
+    #    working_dir = '/opt/airflow/example-files'
+    #)    
+
+    #task3 = DockerOperator(
+    #    task_id = 'csvlint',
+    #    image = 'gsscogs/csvlint',
+    #    command = "csvlint -s example-files/4g-coverage.csv",
+    #    docker_url = 'tcp://docker-proxy:2375',
+    #    network_mode = 'host',
+    #    mount_tmp_dir = False,
+    #    xcom_all=True
+    #)
+
+    #task4 >> task1 >> task2
+  
+    #task3 = DockerOperator(
+    #    task_id = 'csvlint',
+    #    image = 'gsscogs/csvlint',
+    #    command = "csvlint -s :/opt/airflow/example-files/4g-coverage.csv",
+    #    docker_url = 'tcp://docker-proxy:2375',
+    #    network_mode = 'host',
+    #    working_dir = '/opt/airflow/example-files/out'
+    #)
 
     #task3
