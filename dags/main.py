@@ -311,39 +311,3 @@ with DAG(
     )   
     
     task1 >> task2 >> task3 >> task4 >> task5
-
-
-    #Currently the below will run successfully (with the corresponding stuff added to docker-compose)
-    #but I havent figured out how to return the output.ttl yet so it doesnt actually return anything at the moment
-    
-    #task4 = DockerOperator(
-    #    task_id = 'csv2rdf',
-    #    image = 'gsscogs/csv2rdf',
-    #    command = "csv2rdf -u https://raw.githubusercontent.com/GSS-Cogs/poc-pipelines/main/example-files/life-expectancy-by-region-sex-and-time.csv-metadata.json -m minimal -o output.ttl",
-    #    docker_url = 'tcp://docker-proxy:2375',
-    #    network_mode = 'bridge',
-    #    working_dir = '/opt/airflow/example-files'
-    #)    
-
-    #task3 = DockerOperator(
-    #    task_id = 'csvlint',
-    #    image = 'gsscogs/csvlint',
-    #    command = "csvlint -s example-files/4g-coverage.csv",
-    #    docker_url = 'tcp://docker-proxy:2375',
-    #    network_mode = 'host',
-    #    mount_tmp_dir = False,
-    #    xcom_all=True
-    #)
-
-    #task4 >> task1 >> task2
-  
-    #task3 = DockerOperator(
-    #    task_id = 'csvlint',
-    #    image = 'gsscogs/csvlint',
-    #    command = "csvlint -s :/opt/airflow/example-files/4g-coverage.csv",
-    #    docker_url = 'tcp://docker-proxy:2375',
-    #    network_mode = 'host',
-    #    working_dir = '/opt/airflow/example-files/out'
-    #)
-
-    #task3
