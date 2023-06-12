@@ -6,6 +6,7 @@ from airflow.operators.bash import BashOperator
 from airflow.providers.docker.operators.docker import DockerOperator
 from dotenv import load_dotenv
 from airflow.models import Variable
+from docker.types import Mount
 
 import sys
 import logging
@@ -273,33 +274,43 @@ with DAG(
     default_args = default_args,
     dag_id = 'Auth_and_push_to_drafter',
     description = 'Authenticate user to staging and create draft',
-    start_date = datetime(2023, 5, 22),
+    start_date = datetime(2023, 6, 11),
     schedule_interval = '@daily'
-) as dag:
-    #task0 = DockerOperator(
-    #    task_id = 'csvlint',
-    #    image = 'gsscogs/csvlint',
-    #    command = "csvlint -s https://raw.githubusercontent.com/RedWalters/prototype_pipeline/main/example-files/life-expectancy-by-region-sex-and-time.csv-metadata.json",
-    #    docker_url = 'tcp://docker-proxy:2375',
-    #    network_mode = 'host',
-    #    working_dir = '/opt/airflow/example-files/out'
-    #)    
+) as dag:     
     task1 = BashOperator(
         task_id = 'csvcubed',
         bash_command = 'csvcubed build ${AIRFLOW_HOME}/example-files/4g-coverage.csv',
         cwd='example-files'
-    )    
-    task2= PythonOperator(
+    )
+    task2 = DockerOperator(
+        task_id = 'csvlint',
+        image = 'gsscogs/csvlint',
+        command = "csvlint -s /example-files/out/4g-coverage.csv-metadata.json",
+        mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
+        docker_url='tcp://docker-proxy:2375',
+        network_mode='bridge',
+        mount_tmp_dir=False
+    )
+    task3 = DockerOperator(
+        task_id = 'csv2rdf',
+        image = 'gsscogs/csv2rdf',
+        command = "csv2rdf -u /example-files/out/4g-coverage.csv-metadata.json -m minimal -o /example-files/out/output.ttl",
+        mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
+        docker_url='tcp://docker-proxy:2375',
+        network_mode='bridge',
+        mount_tmp_dir=False
+    )         
+    task4= PythonOperator(
         task_id = 'authenticate',
         python_callable = authenticate
     )
-    task3 = PythonOperator(
+    task5 = PythonOperator(
         task_id = 'create_draft',
         python_callable = create_draft,
         provide_context = True
     )   
     
-    task1 >> task2 >> task3
+    task1 >> task2 >> task3 >> task4 >> task5
 
 
     #Currently the below will run successfully (with the corresponding stuff added to docker-compose)
