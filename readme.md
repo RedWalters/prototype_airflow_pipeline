@@ -18,6 +18,11 @@ Then navigate to 'localhost:8080/' on your web browser of choice and login with 
 
 You should then just be able to run the 'Auth_and_push_to_drafter' DAG from there. 
 
+### Credentials
+
+To be able to authorise and upload onto PMD you will need to import your credentials into the variable manager on the airflow webserver. Go to 'admin' - 'Variables' on the toolbar to import. 
+I have added a template for the import file named Auth.json
+
 ### Any issues
 
 There is probably something I'm forgetting or an issue I solved and forgot to add.
