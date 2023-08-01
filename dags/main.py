@@ -346,17 +346,17 @@ with DAG(
             task_id = 'authenticate',
             python_callable = authenticate
         )
-        #csvcubed = BashOperator(
-        #    task_id = 'csvcubed',
-        #    #bash_command = 'csvcubed build ${AIRFLOW_HOME}/example-files/4g-coverage.csv',
-        #    bash_command = 'csvcubed build ${AIRFLOW_HOME}/example-files/' + tidy_csv,
-        #    cwd='example-files'
-        #)  
-        #createDraft = PythonOperator(
-        #    task_id = 'create_draft',
-        #    python_callable = create_draft, 
-        #    provide_context = True
-        #)  
+        csvcubed = BashOperator(
+            task_id = 'csvcubed',
+            #bash_command = 'csvcubed build ${AIRFLOW_HOME}/example-files/4g-coverage.csv',
+            bash_command = 'csvcubed build ${AIRFLOW_HOME}/example-files/' + tidy_csv,
+            cwd='example-files'
+        )  
+        createDraft = PythonOperator(
+            task_id = 'create_draft',
+            python_callable = create_draft, 
+            provide_context = True
+        )  
         #test = PythonOperator(
         #    task_id = 'sbkndfklnsb',
         #    python_callable = test_tasks,
@@ -375,24 +375,24 @@ with DAG(
         #    python_callable = deleteDraft
         #) 
 
-        #csvlint_source = DockerOperator(
-        #        task_id = 'csvlint_{}'.format(tidy_csv),
-        #        image = 'gsscogs/csvlint',
-        #        command = "csvlint -s /example-files/out/" + tidy_csv + "-metadata.json",
-        #        mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
-        #        docker_url='tcp://docker-proxy:2375',
-        #        network_mode='bridge',
-        #        mount_tmp_dir=False
-        #    )
-        #csv2rdf_source = DockerOperator(
-        #        task_id = 'csv2rdf_{}'.format(tidy_csv),
-        #        image = 'gsscogs/csv2rdf',
-        #        command = "csv2rdf -u /example-files/out/{} -m minimal -o /example-files/out/{}.ttl".format(tidy_csv + "-metadata.json", tidy_csv.split('.')[0]) ,
-        #        mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
-        #        docker_url='tcp://docker-proxy:2375',
-        #        network_mode='bridge',
-        #        mount_tmp_dir=False
-        #    )
+        csvlint_source = DockerOperator(
+                task_id = 'csvlint_{}'.format(tidy_csv),
+                image = 'gsscogs/csvlint',
+                command = "csvlint -s /example-files/out/" + tidy_csv + "-metadata.json",
+                mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
+                docker_url='tcp://docker-proxy:2375',
+                network_mode='bridge',
+                mount_tmp_dir=False
+            )
+        csv2rdf_source = DockerOperator(
+                task_id = 'csv2rdf_{}'.format(tidy_csv),
+                image = 'gsscogs/csv2rdf',
+                command = "csv2rdf -u /example-files/out/{} -m minimal -o /example-files/out/{}.ttl".format(tidy_csv + "-metadata.json", tidy_csv.split('.')[0]) ,
+                mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
+                docker_url='tcp://docker-proxy:2375',
+                network_mode='bridge',
+                mount_tmp_dir=False
+            )
         create_draft_source = PythonOperator(
                 task_id = 'create_draft_{}'.format(tidy_csv + "-metadata.json",),
                 python_callable = create_draft,
@@ -400,38 +400,38 @@ with DAG(
                 provide_context = True
             )
         
-        auth >> create_draft_source >> passToUser
+        #auth >> create_draft_source >> passToUser
 
-        #auth >> csvcubed >> csvlint_source >> csv2rdf_source >> create_draft_source >> passToUser
+        auth >> csvcubed >> csvlint_source >> csv2rdf_source >> create_draft_source >> passToUser
         
-        #for file in metadata_json_files:
-        #    if tidy_csv not in file:
-        #        csvlint = DockerOperator(
-        #                task_id = 'csvlint_{}'.format(file),
-        #                image = 'gsscogs/csvlint',
-        #                command = "csvlint -s /example-files/out/{}".format(file),
-        #                mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
-        #                docker_url='tcp://docker-proxy:2375',
-        #                network_mode='bridge',
-        #                mount_tmp_dir=False
-        #            )
-        #        csv2rdf = DockerOperator(
-        #                task_id = 'csv2rdf_{}'.format(file),
-        #                image = 'gsscogs/csv2rdf',
-        #                command = "csv2rdf -u /example-files/out/{} -m minimal -o /example-files/out/{}.ttl".format(file, file.split('.')[0]) ,
-        #                mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
-        #                docker_url='tcp://docker-proxy:2375',
-        #                network_mode='bridge',
-        #                mount_tmp_dir=False
-        #            )
-        #        create_drafts = PythonOperator(
-        #                task_id = 'create_draft_{}'.format(file),
-        #                python_callable = create_draft,
-        #                op_args = [file],
-        #                provide_context = True
-        #            )
-        #    
-        #        passToUser >> csvlint >> csv2rdf >> create_drafts
+        for file in metadata_json_files:
+            if tidy_csv not in file:
+                csvlint = DockerOperator(
+                        task_id = 'csvlint_{}'.format(file),
+                        image = 'gsscogs/csvlint',
+                        command = "csvlint -s /example-files/out/{}".format(file),
+                        mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
+                        docker_url='tcp://docker-proxy:2375',
+                        network_mode='bridge',
+                        mount_tmp_dir=False
+                    )
+                csv2rdf = DockerOperator(
+                        task_id = 'csv2rdf_{}'.format(file),
+                        image = 'gsscogs/csv2rdf',
+                        command = "csv2rdf -u /example-files/out/{} -m minimal -o /example-files/out/{}.ttl".format(file, file.split('.')[0]) ,
+                        mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
+                        docker_url='tcp://docker-proxy:2375',
+                        network_mode='bridge',
+                        mount_tmp_dir=False
+                    )
+                create_drafts = PythonOperator(
+                        task_id = 'create_draft_{}'.format(file),
+                        python_callable = create_draft,
+                        op_args = [file],
+                        provide_context = True
+                    )
+            
+                passToUser >> csvlint >> csv2rdf >> create_drafts
     
     else:
         removeDraft = PythonOperator(
