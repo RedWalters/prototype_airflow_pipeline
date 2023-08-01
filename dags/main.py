@@ -28,21 +28,6 @@ default_args = {
     'retry_delay' : timedelta(minutes = 2)
 }
 
-def submitTo(
-    token: str,
-    pmd_api_endpoint: str,
-    draft_id: str
-):
-    """Create a draft in PMD and return the draft ID."""
-    req = requests.post(
-        f"{pmd_api_endpoint}/draftset/{draft_id}/submit-to",
-        headers={"Authorization": f"Bearer {token}"},
-        json={"permission" : "editor", "user" : "jon.walters@ons.gov.uk"},
-    )
-    req.raise_for_status()
-    return req.json().get("id")
-
-
 def get_dataset_iri(graph: rdflib.Graph) -> str:
     """Get the dataset IRI from an rdflib graph. This is used to help construct
     the IRI of the named graph in which the metadata is stored."""
@@ -238,11 +223,12 @@ def authenticate():
     )
     logger.info("Creating draft")
     draft_id = pmd_create_draft(token=token, pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT"))
-    logger.info(f"Draft ID: {draft_id}")
+    logger.info(f"Draft ID: {draft_id}") 
 
     return token, draft_id
 
-def create_draft(**kwargs):
+def create_draft(*args, **kwargs,):
+    file_name = args[0]
     ti = kwargs['ti']
     params = ti.xcom_pull(task_ids='authenticate')
     token = params[0]
@@ -259,122 +245,199 @@ def create_draft(**kwargs):
         token=token,
         pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT"),
         draft_id=draft_id,
-        metadata_file= "example-files/out/4g-coverage.csv-metadata.json"
+        metadata_file= "example-files/out/" + file_name #4g-coverage.csv-metadata.json"
     )
     logger.info("Adding PMDCAT metadata to draft")
     add_pmdcat(
         token=token,
         pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT"),
         draft_id=draft_id,
-        metadata_file= "example-files/out/4g-coverage.csv-metadata.json"
+        metadata_file= "example-files/out/" + file_name #4g-coverage.csv-metadata.json"
     )
     logger.info("Adding observations to draft")
     add_observations(
         token=token,
         pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT"),
         draft_id=draft_id,
-        metadata_file="example-files/out/4g-coverage.csv-metadata.json",
-        observations_file="example-files/out/output.ttl",
+        metadata_file="example-files/out/" + file_name, #4g-coverage.csv-metadata.json"
+        observations_file="example-files/out/" + file_name.split('.')[0] + ".ttl" #4g-coverage.ttl",
     )
 
     return draft_id
 
-def test_tasks():
-    print(os.getcwd())
-    #path_to_json = 'example-files/out/'
-    #metadata_json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith('metadata.json')]
-    #print(metadata_json_files) 
+def submitTo(**kwargs):
+    ti = kwargs['ti']
+    params = ti.xcom_pull(task_ids='authenticate')
+    token = params[0]
+    draft_id = params[1]
+    pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT")
+    """Create a draft in PMD and return the draft ID."""
+    print(pmd_api_endpoint)
+    req = requests.post(
+        f"{pmd_api_endpoint}/draftset/{draft_id}/submit-to",
+        headers={"Authorization": f"Bearer {token}", "Content-Type" : "application/json"},
+        json={"role" : "editor"},
+    )
+    req.raise_for_status()
+    return req.json().get("id")
 
-    #return metadata_json_files
+#def claim_draft(**kwargs):
+#    ti = kwargs['ti']
+#    params = ti.xcom_pull(task_ids='authenticate')
+#    token = params[0]
+#    draft_id = params[1]
+#    pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT")
+#    """Create a draft in PMD and return the draft ID."""
+#    print(pmd_api_endpoint)
+#    req = requests.put(
+#        f"{pmd_api_endpoint}/draftset/{draft_id}/claim",
+#        headers={"Authorization": f"Bearer {token}"}
+#    )
+#    req.raise_for_status()
+#    return req.json().get("id")
+
+def deleteDraft(**kwargs):
+    ti = kwargs['ti']
+    params = ti.xcom_pull(task_ids='authenticate')
+    token = params[0]
+    draft_id = params[1]
+    pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT")
+    req = requests.delete(
+        f"{pmd_api_endpoint}/draftset/{draft_id}",
+        headers={"Authorization": f"Bearer {token}"}
+    )
+    req.raise_for_status()
+    return req.json().get("id")
+
+
+def test_tasks(*args, **kwargs):
+    print(args)
+    print(kwargs)
+    ti = kwargs['ti']
+    params = ti.xcom_pull(task_ids='authenticate')
+    token = params[0]
+    draft_id = params[1]
+    return draft_id
+
+def multiple_csv_error():
+    raise ValueError('Multiple Input CSV files detected, please ensure only 1 source Tidy CSV is present.')
+
 
 path_to_json = './example-files/out/' 
 metadata_json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith('metadata.json')]
 
+path_to_source = './example-files/'
+input_file = [file for file in os.listdir(path_to_source) if file.endswith('.csv')]
 #EmptyOperator.ui_color = '#008000'
 
 with DAG(
     default_args = default_args,
-    dag_id = 'Auth_and_push_to_drafter',
+    dag_id = 'Auth_and_push_to_drafter_v1',
     description = 'Authenticate user to staging and create draft',
-    start_date = datetime(2023, 6, 21),
+    start_date = datetime(2023, 7, 30),
     schedule_interval = '@daily'
 ) as dag:
-    csv2rdfTask = EmptyOperator(
-        task_id = 'csv2rdf'
-    )   
-    csvcubed = BashOperator(
-        task_id = 'csvcubed',
-        bash_command = 'csvcubed build ${AIRFLOW_HOME}/example-files/4g-coverage.csv',
-        cwd='example-files'
-    )      
-    auth= PythonOperator(
-        task_id = 'authenticate',
-        python_callable = authenticate
-    )
-    createDraft = PythonOperator(
-        task_id = 'create_draft',
-        python_callable = create_draft,
-        provide_context = True
-    )   
-    passToUser = PythonOperator(
-        task_id = 'passToUser',
-        python_callable = submitTo
-    )
-    
-    #task1 >> task2 >> task3 >> task4 >> task5
+    if len(input_file) == 1:
+        tidy_csv = input_file[0]
+        #[x for x in metadata_json_files if not (tidy_csv.split('.')[0] in x)]
 
-    #task4 >> task5 >> task6
+        
+        auth= PythonOperator(
+            task_id = 'authenticate',
+            python_callable = authenticate
+        )
+        #csvcubed = BashOperator(
+        #    task_id = 'csvcubed',
+        #    #bash_command = 'csvcubed build ${AIRFLOW_HOME}/example-files/4g-coverage.csv',
+        #    bash_command = 'csvcubed build ${AIRFLOW_HOME}/example-files/' + tidy_csv,
+        #    cwd='example-files'
+        #)  
+        #createDraft = PythonOperator(
+        #    task_id = 'create_draft',
+        #    python_callable = create_draft, 
+        #    provide_context = True
+        #)  
+        #test = PythonOperator(
+        #    task_id = 'sbkndfklnsb',
+        #    python_callable = test_tasks,
+        #    op_args=["test"]
+        #) 
+        passToUser = PythonOperator(
+            task_id = 'passToUser',
+            python_callable = submitTo
+        )
+        #claimDraft = PythonOperator(
+        #    task_id = 'claimDraft',
+        #    python_callable = claim_draft
+        #)
+        #removeDraft = PythonOperator(
+        #    task_id = 'removeDraft',
+        #    python_callable = deleteDraft
+        #) 
 
-    for file in metadata_json_files:
-        csvlint = DockerOperator(
-                task_id = 'csvlint_{}'.format(file),
-                image = 'gsscogs/csvlint',
-                command = "csvlint -s /example-files/out/{}".format(file,),
-                mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
-                docker_url='tcp://docker-proxy:2375',
-                network_mode='bridge',
-                mount_tmp_dir=False
+        #csvlint_source = DockerOperator(
+        #        task_id = 'csvlint_{}'.format(tidy_csv),
+        #        image = 'gsscogs/csvlint',
+        #        command = "csvlint -s /example-files/out/" + tidy_csv + "-metadata.json",
+        #        mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
+        #        docker_url='tcp://docker-proxy:2375',
+        #        network_mode='bridge',
+        #        mount_tmp_dir=False
+        #    )
+        #csv2rdf_source = DockerOperator(
+        #        task_id = 'csv2rdf_{}'.format(tidy_csv),
+        #        image = 'gsscogs/csv2rdf',
+        #        command = "csv2rdf -u /example-files/out/{} -m minimal -o /example-files/out/{}.ttl".format(tidy_csv + "-metadata.json", tidy_csv.split('.')[0]) ,
+        #        mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
+        #        docker_url='tcp://docker-proxy:2375',
+        #        network_mode='bridge',
+        #        mount_tmp_dir=False
+        #    )
+        create_draft_source = PythonOperator(
+                task_id = 'create_draft_{}'.format(tidy_csv + "-metadata.json",),
+                python_callable = create_draft,
+                op_args = [tidy_csv + "-metadata.json"],
+                provide_context = True
             )
-        csvcubed >> csvlint >> csv2rdfTask
+        
+        auth >> create_draft_source >> passToUser
 
-    for file in metadata_json_files:
-        csv2rdf = DockerOperator(
-                task_id = 'csv2rdf_{}'.format(file),
-                image = 'gsscogs/csv2rdf',
-                command = "csv2rdf -u /example-files/out/{} -m minimal -o /example-files/out/{}.ttl".format(file, file.split('.')[0]) ,
-                mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
-                docker_url='tcp://docker-proxy:2375',
-                network_mode='bridge',
-                mount_tmp_dir=False
-            )
+        #auth >> csvcubed >> csvlint_source >> csv2rdf_source >> create_draft_source >> passToUser
+        
+        #for file in metadata_json_files:
+        #    if tidy_csv not in file:
+        #        csvlint = DockerOperator(
+        #                task_id = 'csvlint_{}'.format(file),
+        #                image = 'gsscogs/csvlint',
+        #                command = "csvlint -s /example-files/out/{}".format(file),
+        #                mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
+        #                docker_url='tcp://docker-proxy:2375',
+        #                network_mode='bridge',
+        #                mount_tmp_dir=False
+        #            )
+        #        csv2rdf = DockerOperator(
+        #                task_id = 'csv2rdf_{}'.format(file),
+        #                image = 'gsscogs/csv2rdf',
+        #                command = "csv2rdf -u /example-files/out/{} -m minimal -o /example-files/out/{}.ttl".format(file, file.split('.')[0]) ,
+        #                mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
+        #                docker_url='tcp://docker-proxy:2375',
+        #                network_mode='bridge',
+        #                mount_tmp_dir=False
+        #            )
+        #        create_drafts = PythonOperator(
+        #                task_id = 'create_draft_{}'.format(file),
+        #                python_callable = create_draft,
+        #                op_args = [file],
+        #                provide_context = True
+        #            )
+        #    
+        #        passToUser >> csvlint >> csv2rdf >> create_drafts
     
-        csv2rdfTask >> csv2rdf >> auth >> createDraft >> passToUser
+    else:
+        removeDraft = PythonOperator(
+            task_id = 'Error',
+            python_callable = multiple_csv_error
+            
+        )  
 
-
-
-
-
-
-
-
-
-
-#task2 = DockerOperator(
-    #    task_id = 'csvlint',
-    #    
-    #    command = "csvlint -s /example-files/out/4g-coverage.csv-metadata.json",
-    #    mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
-    #    docker_url='tcp://docker-proxy:2375',
-    #    network_mode='bridge',
-    #    mount_tmp_dir=False
-    #)
-
-#task3 = DockerOperator(
-    #    task_id = 'csv2rdf',
-    #    image = 'gsscogs/csv2rdf',
-    #    command = "csv2rdf -u /example-files/out/4g-coverage.csv-metadata.json -m minimal -o /example-files/out/output.ttl",
-    #    mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
-    #    docker_url='tcp://docker-proxy:2375',
-    #    network_mode='bridge',
-    #    mount_tmp_dir=False
-    #)   
+        
