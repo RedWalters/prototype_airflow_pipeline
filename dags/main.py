@@ -137,7 +137,7 @@ def add_csvw(token: str, pmd_api_endpoint: str, draft_id: str, metadata_file):
         data=csvw,
         params={"graph": graph_name},
     )
-    return req.json()
+    return draft_id
 
 def add_pmdcat(token: str, pmd_api_endpoint: str, draft_id: str, metadata_file: str):
     """Add PMDCAT metadata to a draft in PMD."""
@@ -186,7 +186,7 @@ def add_pmdcat(token: str, pmd_api_endpoint: str, draft_id: str, metadata_file: 
         data=pmdcat,
         params={"graph": graph_name},
     )
-    return req.json()
+    return draft_id
 
 def add_observations(
     token: str,
@@ -201,6 +201,7 @@ def add_observations(
     # The dataset observations are stored in a named graph which is given an
     # IRI which is the same as the qb:DataSet's IRI.
     graph_name = get_datacube_iri(graph)
+    print(get_datacube_iri(graph))
     req = requests.put(
         f"{pmd_api_endpoint}/draftset/{draft_id}/data",
         headers={
@@ -210,7 +211,7 @@ def add_observations(
         data=open(observations_file, "rb"),
         params={"graph": graph_name},
     )
-    return req.json()
+    return draft_id
 
 def authenticate():
     logger = logging.getLogger("airflow.task")
@@ -226,6 +227,85 @@ def authenticate():
     logger.info(f"Draft ID: {draft_id}") 
 
     return token, draft_id
+
+#def add_metadata(*args, **kwargs,):
+#    metadata_json = args[0]
+#    metadata_csv = args[1]
+#    ti = kwargs['ti']
+#    params = ti.xcom_pull(task_ids='authenticate')
+#    token = params[0]
+#    draft_id = params[1]
+ #   pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT"),
+#    print(pmd_api_endpoint[0])
+#    """Add metadata to an existing draft in PMD."""
+#    graph = rdflib.Graph()
+#    graph.parse(metadata_json)
+#    # The dataset observations are stored in a named graph which is given an
+#    # IRI which is the same as the qb:DataSet's IRI.
+#    graph_name = get_datacube_iri(graph)
+#    csvw = graph.serialize(format="turtle", encoding="utf-8").decode("utf-8")
+#    req = requests.put(
+#        f"{pmd_api_endpoint[0]}/draftset/{draft_id}/data",
+#        headers={
+#            "Authorization": f"Bearer {token}",
+#            "Content-Type": "text/turtle",
+#        },
+#        data=open(metadata_csv, "rb"),
+#        params={"graph": graph_name},
+#    )
+#    return req.json()
+
+def add_metadata(*args, **kwargs,):
+    file_name = args[0]
+    print(file_name)
+    ti = kwargs['ti']
+    params = ti.xcom_pull(task_ids='authenticate')
+    token = params[0]
+    draft_id = params[1]
+    pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT"),
+    print(pmd_api_endpoint[0])
+    """Add metadata to an existing draft in PMD."""
+    req = requests.put(
+        f"{pmd_api_endpoint[0]}/draftset/{draft_id}/data",
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/trig",
+        },
+        data=open(file_name, "rb")
+    )
+
+    graph = rdflib.Graph()
+    graph.parse(file_name)
+    graph_name = get_datacube_iri(graph)
+    print(graph_name)
+
+    #print(graph.serialize(format="turtle", encoding="utf-8").decode("utf-8"))
+
+    res = requests.post(
+        "https://cogs-staging-drafter.publishmydata.com/v1/draftsets",
+        headers={"Accept": "application/json", "Authorization": f"Bearer {token}"},
+        data={
+            "display-name": "display_name",
+        },
+        # Create draftset returns a HTTP 303 which we do not want to
+        # redirect to. Redirecting produces a HTTP 401 response.
+        allow_redirects=False,
+    )
+    
+    if res.status_code == 303:
+        draftset_id = res.headers["location"].rsplit("/")[-1]
+    
+    requests.put(
+        f"https://cogs-staging-drafter.publishmydata.com/v1/draftset/{draftset_id}/data",
+        headers={
+            "Content-Type": "text/turtle",
+            "Authorization": f"Bearer {token}",
+        },
+        params={"graph": graph},
+        data=graph.serialize(format="turtle", encoding="utf-8").decode("utf-8"),
+    )
+
+    return file_name
 
 def create_draft(*args, **kwargs,):
     file_name = args[0]
@@ -322,7 +402,21 @@ def test_tasks(*args, **kwargs):
 def multiple_csv_error():
     raise ValueError('Multiple Input CSV files detected, please ensure only 1 source Tidy CSV is present.')
 
+def bullshiturireplace():
+    # Temp replace this later when changing the URI to be correct
+    metadatafile = open('example-files/out/4g-coverage.ttl')
+    data = json.load(metadatafile)
+    obj_str = json.dumps(data, indent=4).replace('file:///', 'file:/')
+    with open("4g-coverage.csv-metadata.json", 'w') as outfile: 
+        outfile.write(obj_str)
 
+"""
+def jointtl():
+    path_to_ttl = './example-files/out/' 
+    ttl_files = [pos_json for pos_json in os.listdir(path_to_ttl) if pos_json.endswith('.ttl')]
+    with open()e4ry:Khsrzd/srgd\/gds'?Bsgdf\
+"""
+    
 path_to_json = './example-files/out/' 
 metadata_json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith('metadata.json')]
 
@@ -332,9 +426,9 @@ input_file = [file for file in os.listdir(path_to_source) if file.endswith('.csv
 
 with DAG(
     default_args = default_args,
-    dag_id = 'Auth_and_push_to_drafter_v1',
+    dag_id = 'Auth_and_push_to_drafter_v7',
     description = 'Authenticate user to staging and create draft',
-    start_date = datetime(2023, 7, 30),
+    start_date = datetime(2023, 9, 6),
     schedule_interval = '@daily'
 ) as dag:
     if len(input_file) == 1:
@@ -349,19 +443,14 @@ with DAG(
         csvcubed = BashOperator(
             task_id = 'csvcubed',
             #bash_command = 'csvcubed build ${AIRFLOW_HOME}/example-files/4g-coverage.csv',
-            bash_command = 'csvcubed build ${AIRFLOW_HOME}/example-files/' + tidy_csv,
+            bash_command = 'csvcubed build ${AIRFLOW_HOME}/example-files/' + tidy_csv + ' -c ' + tidy_csv.split('.')[0] + '.json --validation-errors-to-file',
             cwd='example-files'
         )  
-        createDraft = PythonOperator(
-            task_id = 'create_draft',
-            python_callable = create_draft, 
-            provide_context = True
-        )  
-        #test = PythonOperator(
-        #    task_id = 'sbkndfklnsb',
-        #    python_callable = test_tasks,
-        #    op_args=["test"]
-        #) 
+        #createDraft = PythonOperator(
+        #    task_id = 'create_draft',
+        #    python_callable = create_draft, 
+        #    provide_context = True
+        #)  
         passToUser = PythonOperator(
             task_id = 'passToUser',
             python_callable = submitTo
@@ -374,7 +463,16 @@ with DAG(
         #    task_id = 'removeDraft',
         #    python_callable = deleteDraft
         #) 
-
+        #pmdifyTest = DockerOperator(
+        #        task_id = 'pmdify{}'.format(tidy_csv),
+        #        image = 'gsscogs/pmdutils',
+        #        command = "pmdutils dcat pmdify /example-files/out/4g-coverage.csv-metadata.json file:/example-files/out/ 4g-coverage 4g-coverage-catalog-metadata)",
+        #        mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
+         #       docker_url='tcp://docker-proxy:2375',
+        #        network_mode='bridge',
+        #        mount_tmp_dir=False
+        #    )
+        
         csvlint_source = DockerOperator(
                 task_id = 'csvlint_{}'.format(tidy_csv),
                 image = 'gsscogs/csvlint',
@@ -393,6 +491,11 @@ with DAG(
                 network_mode='bridge',
                 mount_tmp_dir=False
             )
+        baseURIMatch = BashOperator(
+            task_id = 'baseURIMatch',
+            bash_command = 'sed -i "s|file:/|file:///opt/airflow/|" ${AIRFLOW_HOME}/example-files/out/' + tidy_csv.split('.')[0] + '.ttl',
+            cwd='example-files'
+        )  
         create_draft_source = PythonOperator(
                 task_id = 'create_draft_{}'.format(tidy_csv + "-metadata.json",),
                 python_callable = create_draft,
@@ -400,9 +503,9 @@ with DAG(
                 provide_context = True
             )
         
-        #auth >> create_draft_source >> passToUser
+        #auth >> csv2rdf_source >> create_draft_source >> passToUser
 
-        auth >> csvcubed >> csvlint_source >> csv2rdf_source >> create_draft_source >> passToUser
+        auth >> csvcubed >> csvlint_source >> csv2rdf_source >> baseURIMatch >> create_draft_source >> passToUser
         
         for file in metadata_json_files:
             if tidy_csv not in file:
@@ -424,14 +527,20 @@ with DAG(
                         network_mode='bridge',
                         mount_tmp_dir=False
                     )
+                addMetadata = PythonOperator(
+                    task_id = 'addMetadata_{}'.format(file),
+                    python_callable = add_metadata,
+                    op_args = ['example-files/out/' + file.split('.')[0] + '.ttl'],
+                    provide_context = True
+                )
                 create_drafts = PythonOperator(
                         task_id = 'create_draft_{}'.format(file),
                         python_callable = create_draft,
                         op_args = [file],
                         provide_context = True
-                    )
-            
-                passToUser >> csvlint >> csv2rdf >> create_drafts
+                    )                
+           
+                passToUser >> csvlint >> csv2rdf >> addMetadata >> create_drafts
     
     else:
         removeDraft = PythonOperator(
