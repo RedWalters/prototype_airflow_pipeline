@@ -228,33 +228,6 @@ def authenticate():
 
     return token, draft_id
 
-#def add_metadata(*args, **kwargs,):
-#    metadata_json = args[0]
-#    metadata_csv = args[1]
-#    ti = kwargs['ti']
-#    params = ti.xcom_pull(task_ids='authenticate')
-#    token = params[0]
-#    draft_id = params[1]
- #   pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT"),
-#    print(pmd_api_endpoint[0])
-#    """Add metadata to an existing draft in PMD."""
-#    graph = rdflib.Graph()
-#    graph.parse(metadata_json)
-#    # The dataset observations are stored in a named graph which is given an
-#    # IRI which is the same as the qb:DataSet's IRI.
-#    graph_name = get_datacube_iri(graph)
-#    csvw = graph.serialize(format="turtle", encoding="utf-8").decode("utf-8")
-#    req = requests.put(
-#        f"{pmd_api_endpoint[0]}/draftset/{draft_id}/data",
-#        headers={
-#            "Authorization": f"Bearer {token}",
-#            "Content-Type": "text/turtle",
-#        },
-#        data=open(metadata_csv, "rb"),
-#        params={"graph": graph_name},
-#    )
-#    return req.json()
-
 def add_metadata(*args, **kwargs,):
     file_name = args[0]
     print(file_name)
@@ -361,21 +334,6 @@ def submitTo(**kwargs):
     req.raise_for_status()
     return req.json().get("id")
 
-#def claim_draft(**kwargs):
-#    ti = kwargs['ti']
-#    params = ti.xcom_pull(task_ids='authenticate')
-#    token = params[0]
-#    draft_id = params[1]
-#    pmd_api_endpoint=Variable.get("PMD_API_ENDPOINT")
-#    """Create a draft in PMD and return the draft ID."""
-#    print(pmd_api_endpoint)
-#    req = requests.put(
-#        f"{pmd_api_endpoint}/draftset/{draft_id}/claim",
-#        headers={"Authorization": f"Bearer {token}"}
-#    )
-#    req.raise_for_status()
-#    return req.json().get("id")
-
 def deleteDraft(**kwargs):
     ti = kwargs['ti']
     params = ti.xcom_pull(task_ids='authenticate')
@@ -410,13 +368,6 @@ def bullshiturireplace():
     with open("4g-coverage.csv-metadata.json", 'w') as outfile: 
         outfile.write(obj_str)
 
-"""
-def jointtl():
-    path_to_ttl = './example-files/out/' 
-    ttl_files = [pos_json for pos_json in os.listdir(path_to_ttl) if pos_json.endswith('.ttl')]
-    with open()e4ry:Khsrzd/srgd\/gds'?Bsgdf\
-"""
-    
 path_to_json = './example-files/out/' 
 metadata_json_files = [pos_json for pos_json in os.listdir(path_to_json) if pos_json.endswith('metadata.json')]
 
@@ -433,9 +384,6 @@ with DAG(
 ) as dag:
     if len(input_file) == 1:
         tidy_csv = input_file[0]
-        #[x for x in metadata_json_files if not (tidy_csv.split('.')[0] in x)]
-
-        
         auth= PythonOperator(
             task_id = 'authenticate',
             python_callable = authenticate
@@ -446,32 +394,10 @@ with DAG(
             bash_command = 'csvcubed build ${AIRFLOW_HOME}/example-files/' + tidy_csv + ' -c ' + tidy_csv.split('.')[0] + '.json --validation-errors-to-file',
             cwd='example-files'
         )  
-        #createDraft = PythonOperator(
-        #    task_id = 'create_draft',
-        #    python_callable = create_draft, 
-        #    provide_context = True
-        #)  
         passToUser = PythonOperator(
             task_id = 'passToUser',
             python_callable = submitTo
         )
-        #claimDraft = PythonOperator(
-        #    task_id = 'claimDraft',
-        #    python_callable = claim_draft
-        #)
-        #removeDraft = PythonOperator(
-        #    task_id = 'removeDraft',
-        #    python_callable = deleteDraft
-        #) 
-        #pmdifyTest = DockerOperator(
-        #        task_id = 'pmdify{}'.format(tidy_csv),
-        #        image = 'gsscogs/pmdutils',
-        #        command = "pmdutils dcat pmdify /example-files/out/4g-coverage.csv-metadata.json file:/example-files/out/ 4g-coverage 4g-coverage-catalog-metadata)",
-        #        mounts=[Mount(source="c:/Users/Red/Documents/COGS/Airflow/poc-pipelines-main/example-files", target="/example-files", type="bind")],
-         #       docker_url='tcp://docker-proxy:2375',
-        #        network_mode='bridge',
-        #        mount_tmp_dir=False
-        #    )
         
         csvlint_source = DockerOperator(
                 task_id = 'csvlint_{}'.format(tidy_csv),
@@ -502,8 +428,6 @@ with DAG(
                 op_args = [tidy_csv + "-metadata.json"],
                 provide_context = True
             )
-        
-        #auth >> csv2rdf_source >> create_draft_source >> passToUser
 
         auth >> csvcubed >> csvlint_source >> csv2rdf_source >> baseURIMatch >> create_draft_source >> passToUser
         
